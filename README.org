@@ -1,0 +1,11 @@
+* nxml-mode-extensions
+
+A few helpers to give a nicer =nxml-mode= experience.
+
+* Getting Started
+
+TBD
+
+* Credit
+
+Much is due.
