@@ -19,8 +19,8 @@
 (defvar nxml-mode-extensions-separator "/"
   "The character used to separate elements in the path.")
 
-(defun nxml-mode-extensions-safe-to-enable-p ()
-  "Safe to enable dynamic path update for current file?"
+(defun nxml-mode-extensions-safe-to-enable-p (&rest args)
+  "Safe to enable dynamic path update for current file?. Ignore ARGS."
   (and (buffer-name)
        (< (file-attribute-size (file-attributes (buffer-name) 'integer))) nxml-mode-extensions-maximum-file-size))
 
