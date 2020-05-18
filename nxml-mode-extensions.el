@@ -21,8 +21,8 @@
 
 (defun nxml-mode-extensions-safe-to-enable-p ()
   "Safe to enable dynamic path update for current file?"
-  (< (file-attribute-size (file-attributes (buffer-name) 'integer))
-     nxml-mode-extensions-maximum-file-size))
+  (and (buffer-name)
+       (< (file-attribute-size (file-attributes (buffer-name) 'integer))) nxml-mode-extensions-maximum-file-size))
 
 ;; From: https://www.emacswiki.org/emacs/NxmlMode#toc11
 ;;;###autoload
