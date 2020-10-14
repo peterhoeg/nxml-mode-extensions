@@ -55,11 +55,11 @@
 
 ;; ** Usage
 
-;; 1. `xml-pretty-print-region-or-buffer' pretty print the selected region or entire buffer.
-;; 2. `nxml-mode-extensions-enable-path-in-eldoc-maybe' enable eldoc support
-;; 3. `nxml-mode-extensions-enable-path-in-modeline-maybe' enable modeline support
-;; 4. `nxml-mode-extensions-enable-current-path-maybe' conditionally enable eldoc and modeline support
-;; 5. `nxml-mode-extensions-enable-hideshow ()' enable `hideshow' support
+;; 1. =xml-pretty-print-region-or-buffer= pretty print the selected region or entire buffer.
+;; 2. =nxml-mode-extensions-enable-path-in-eldoc-maybe= enable eldoc support
+;; 3. =nxml-mode-extensions-enable-path-in-modeline-maybe= enable modeline support
+;; 4. =nxml-mode-extensions-enable-current-path-maybe= conditionally enable eldoc and modeline support
+;; 5. =nxml-mode-extensions-enable-hideshow= enable =hideshow= support
 
 ;;; Code:
 
