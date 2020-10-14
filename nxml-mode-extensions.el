@@ -31,21 +31,35 @@
 
 ;; ** Installation
 
-;; 1. Manually for now.
+;; In doom emacs:
+;; #+begin_src emacs-lisp
+;; ;; packages.el
+;; (when (featurep! :lang data)
+;;   (package! nxml-mode-extensions
+;;     :recipe (:host github :repo "peterhoeg/nxml-mode-extensions")))
+;; #+end_src
 
 ;; ** Configure
 
 ;; You probably want to map the pretty printer. In doom emacs:
 
 ;; #+begin_src emacs-lisp
-;; (map! :map nxml-mode-map
-;;   :nv "=" #'xml-pretty-print-region-or-buffer)
+;; (use-package! nxml-mode-extensions :defer t)
+;;
+;; (add-hook! nxml-mode
+;;   (nxml-mode-extensions-enable-current-path-maybe)
+;;   (nxml-mode-extensions-enable-hideshow)
+;;   (map! :map nxml-mode-map
+;;     :nv "=" #'xml-pretty-print-region-or-buffer))
 ;; #+end_src
 
 ;; ** Usage
 
-;; 1. `xml-pretty-print-region-or-buffer' pretty print the selected region or
-;;     entire buffer.
+;; 1. `xml-pretty-print-region-or-buffer' pretty print the selected region or entire buffer.
+;; 2. `nxml-mode-extensions-enable-path-in-eldoc-maybe' enable eldoc support
+;; 3. `nxml-mode-extensions-enable-path-in-modeline-maybe' enable modeline support
+;; 4. `nxml-mode-extensions-enable-current-path-maybe' conditionally enable eldoc and modeline support
+;; 5. `nxml-mode-extensions-enable-hideshow ()' enable `hideshow' support
 
 ;;; Code:
 
@@ -65,7 +79,6 @@
        (< (file-attribute-size (file-attributes (buffer-name) 'integer))) nxml-mode-extensions-maximum-file-size))
 
 ;; From: https://www.emacswiki.org/emacs/NxmlMode#toc11
-;;;###autoload
 (defun nxml-mode-extensions-get-path ()
   "Display the hierarchy of XML elements the point is on as a path."
   (interactive)
@@ -113,7 +126,7 @@
 ;;;###autoload
 (defun nxml-mode-extensions-enable-hideshow ()
   "Enable HideShow support for NXML."
-  (when (require 'hideshow)
+  (with-eval-after-load 'hideshow
     (add-to-list
      'hs-special-modes-alist
      '(nxml-mode
@@ -125,7 +138,6 @@
        nil))))
 
 ;; http://stackoverflow.com/a/5198243/48082
-;;;###autoload
 (defun xml-pretty-print-region (begin end)
   "Pretty format XML markup in region."
   (interactive "r")
