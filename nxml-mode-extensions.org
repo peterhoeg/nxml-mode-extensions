@@ -1,71 +1,74 @@
-;;; nxml-mode-extensions.el --- nxml-mode helpers  -*- lexical-binding: t; -*-
+# Created 2020-10-14 Wed 11:22
+#+TITLE: nxml-mode helpers
+#+AUTHOR: Peter Hoeg
 
-;; * Header
-;; #+begin_example
-;; Copyright (C) 2019-2020 Peter Hoeg
+* Header
+#+begin_example
+Copyright (C) 2019-2020 Peter Hoeg
 
-;; Author: Peter Hoeg <peter@hoeg.com>
-;; Homepage: https://github.com/peterhoeg/nxml-mode-extensions
-;; Keywords: convenience
-;; Package-Requires: ((emacs "25.1"))
-;; Version: 0.1
+Author: Peter Hoeg <peter@hoeg.com>
+Homepage: https://github.com/peterhoeg/nxml-mode-extensions
+Keywords: convenience
+Package-Requires: ((emacs "25.1"))
+Version: 0.1
 
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
-;; (at your option) any later version.
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
-;; #+end_example
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#+end_example
 
-;;; Commentary:
+* What is nxml-mode-extensions                                          :README:
+A few handy extensions for working in nxml-mode
 
-;; * What is nxml-mode-extensions                                      :README:
-;; A few handy extensions for working in nxml-mode
+** Installation
 
-;; ** Installation
+1. Manually for now.
 
-;; 1. Manually for now.
+** Configure
 
-;; ** Configure
+You probably want to map the pretty printer. In doom emacs:
 
-;; You probably want to map the pretty printer. In doom emacs:
+#+begin_src emacs-lisp
+(map! :map nxml-mode-map
+  :nv "=" #'xml-pretty-print-region-or-buffer)
+#+end_src
 
-;; #+begin_src emacs-lisp
-;; (map! :map nxml-mode-map
-;;   :nv "=" #'xml-pretty-print-region-or-buffer)
-;; #+end_src
+** Usage
 
-;; ** Usage
+1. `xml-pretty-print-region-or-buffer' pretty print the selected region or
+   entire buffer.
 
-;; 1. `xml-pretty-print-region-or-buffer' pretty print the selected region or
-;;     entire buffer.
+* nxml-mode-extensions's code                                             :code:
 
-;;; Code:
-
-;; * nxml-mode-extensions's code                                           :code:
-
-;;;###autoload
+#+begin_src emacs-lisp
 (defvar nxml-mode-extensions-maximum-file-size 1000000
   "Maximum file size to enable eldoc.")
+#+end_src
 
-;;;###autoload
+#+begin_src emacs-lisp
 (defvar nxml-mode-extensions-separator "/"
   "The character used to separate elements in the path.")
+#+end_src
 
+#+begin_src emacs-lisp
 (defun nxml-mode-extensions-safe-to-enable-p (&rest args)
   "Safe to enable dynamic path update for current file?. Ignore ARGS."
   (and (buffer-name)
        (< (file-attribute-size (file-attributes (buffer-name) 'integer))) nxml-mode-extensions-maximum-file-size))
+#+end_src
 
-;; From: https://www.emacswiki.org/emacs/NxmlMode#toc11
-;;;###autoload
+From: https://www.emacswiki.org/emacs/NxmlMode#toc11
+
+#+begin_src emacs-lisp
 (defun nxml-mode-extensions-get-path ()
   "Display the hierarchy of XML elements the point is on as a path."
   (interactive)
@@ -84,8 +87,9 @@
           (when (called-interactively-p t)
             (message str))
           str)))))
+#+end_src
 
-;;;###autoload
+#+begin_src emacs-lisp
 (defun nxml-mode-extensions-enable-path-in-eldoc-maybe (&optional force enable-mode)
   "Enable current xpath with eldoc and optionally `ENABLE-MODE'."
   (when (or (nxml-mode-extensions-safe-to-enable-p)
@@ -94,8 +98,9 @@
          'nxml-mode-extensions-get-path)
     (when enable-mode
       (eldoc-mode 1))))
+#+end_src
 
-;;;###autoload
+#+begin_src emacs-lisp
 (defun nxml-mode-extensions-enable-path-in-modeline-maybe (&optional force enable-mode)
   "Enable current xpath in modeline and optionally `ENABLE-MODE'."
   (when (or (nxml-mode-extensions-safe-to-enable-p)
@@ -103,14 +108,16 @@
     (add-hook 'which-func-functions 'nxml-mode-extensions-get-path t t)
     (when enable-mode
       (which-function-mode 1))))
+#+end_src
 
-;;;###autoload
+#+begin_src emacs-lisp
 (defun nxml-mode-extensions-enable-current-path-maybe (&optional force enable-modes)
   "Conditionally enable current xpath with eldoc and modeline."
   (nxml-mode-extensions-enable-path-in-eldoc-maybe force enable-modes)
   (nxml-mode-extensions-enable-path-in-modeline-maybe force enable-modes))
+#+end_src
 
-;;;###autoload
+#+begin_src emacs-lisp
 (defun nxml-mode-extensions-enable-hideshow ()
   "Enable HideShow support for NXML."
   (when (require 'hideshow)
@@ -123,9 +130,11 @@
        "<!--"
        sgml-skip-tag-forward
        nil))))
+#+end_src
 
-;; http://stackoverflow.com/a/5198243/48082
-;;;###autoload
+http://stackoverflow.com/a/5198243/48082
+
+#+begin_src emacs-lisp
 (defun xml-pretty-print-region (begin end)
   "Pretty format XML markup in region."
   (interactive "r")
@@ -148,14 +157,17 @@
     ;; since we are changing things anyway, we might as well clean up whitespace
     (delete-trailing-whitespace begin end)
     (normal-mode)))
+#+end_src
 
-;;;###autoload
+#+begin_src emacs-lisp
 (defun xml-pretty-print-region-or-buffer ()
   "Pretty format XML in region or buffer."
   (interactive)
   (if (region-active-p)
       (xml-pretty-print-region (region-beginning) (region-end))
     (xml-pretty-print-region (point-min) (point-max))))
+#+end_src
 
+#+begin_src emacs-lisp
 (provide 'nxml-mode-extensions)
-;;; nxml-mode-extensions.el ends here
+#+end_src
